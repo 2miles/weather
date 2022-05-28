@@ -1,0 +1,8 @@
+{% extends 'weather/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+</p> {{ user.username }} is the current user </p>
+{% else %}
+<h2> Login or signup to to continue </h2>
+{% endif %}
+{% endblock content %}
