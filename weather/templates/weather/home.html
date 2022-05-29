@@ -1,7 +1,93 @@
 {% extends 'weather/base.html' %}
 {% block content %}
 {% if user.is_authenticated %}
-</p> {{ user.username }} is the current user </p>
+
+<!-- <p>
+    {{ all_data }}
+</p>
+{% for data in weather_data %}
+<p> Name: {{ data.name }} </p>
+<p> Des: {{ data.description }} </p>
+<p> Icon: {{ data.icon }} </p>
+<p> Temp: {{ data.temp }} </p>
+<p> Humidity: {{ data.humidity }} </p>
+<p> Windspeed: {{ data.windspeed }} </p>
+<p> Sunrise: {{ data.sunrise }} </p>
+<p> Sunset: {{ data.sunset }} </p>
+<br>
+{% endfor %} -->
+
+
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    What's the weather like?
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                {{ form.name }}
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-info">
+                                    Add City
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    {% for data in weather_data %}
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-50x50">
+                                    <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <span class="title">{{ data.city_name }}</span>
+                                        <br>
+                                        <span class="subtitle">
+                                            <b>
+                                                {{ data.temp }}
+                                            </b>
+                                            , {{ data.humidity }}
+                                            humidity</span>
+                                        <br> {{ data.description }}
+                                        <br> {{ data.windspeed }} winds
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    </footer>
+</body>
+
 {% else %}
 <h2> Login or signup to to continue </h2>
 {% endif %}
