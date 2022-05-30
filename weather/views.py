@@ -72,33 +72,10 @@ def home_page_view(request):
         ).strftime("%I:%M %p")
         return weather_data
 
-    def parse_location(input: str) -> dict:
-        """
-        Converts comma seperated location string to dict. \\
-        There are 3 cases: \\
-        "Miami, FL, US" ->  {"city_code": "Miami", "state_code": "FL", "country_code": "US"} \\
-        "Miami, US"     ->  {"city_code": "Miami", "country_code": "US"} \\
-        "Miami"         ->  {"city_code": "Miami"}
-        """
-        codes_dict = {}
-        codes = input.split(",")
-        codes_dict["city_name"] = codes[0]
-        if len(codes) > 2:
-            codes_dict["state_code"] = codes[1]
-            codes_dict["country_code"] = codes[2]
-        elif len(codes) > 1:
-            codes_dict["country_code"] = codes[1]
-        return codes_dict
-
-    def create_title_name(input_str: str, station_name: str) -> str:
-        codes = input_str.split(",")
-        if (codes[0]).lower() != station_name.lower():
-            return (codes[0] + " (" + station_name + ")").title()
-        return station_name.title()
-
     if request.method == "POST":
         form = CityForm(request.POST)
-        form.save()
+        if form.is_valid():
+            form.save()
     form = CityForm()
     cities = City.objects.all()
     weather_data_list = []
@@ -123,3 +100,29 @@ def home_page_view(request):
         "form": form,
     }
     return render(request, "weather/home.html", context)
+
+
+def create_title_name(input_str: str, station_name: str) -> str:
+    codes = input_str.split(",")
+    if (codes[0]).lower() != station_name.lower():
+        return (codes[0] + " (" + station_name + ")").title()
+    return station_name.title()
+
+
+def parse_location(input: str) -> dict:
+    """
+    Converts comma seperated location string to dict. \\
+    There are 3 cases: \\
+    "Miami, FL, US" ->  {"city_code": "Miami", "state_code": "FL", "country_code": "US"} \\
+    "Miami, US"     ->  {"city_code": "Miami", "country_code": "US"} \\
+    "Miami"         ->  {"city_code": "Miami"}
+    """
+    codes_dict = {}
+    codes = input.split(",")
+    codes_dict["city_name"] = codes[0]
+    if len(codes) > 2:
+        codes_dict["state_code"] = codes[1]
+        codes_dict["country_code"] = codes[2]
+    elif len(codes) > 1:
+        codes_dict["country_code"] = codes[1]
+    return codes_dict

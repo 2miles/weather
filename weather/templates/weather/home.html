@@ -36,14 +36,14 @@
                         {% csrf_token %}
                         <div class="field has-addons">
                             <div class="control is-expanded">
-                                {{ form.name }}
+                                {{ form }}
                             </div>
                             <div class="control">
-                                <button type="submit" class="button is-info">
-                                    Add City
-                                </button>
                             </div>
                         </div>
+                        <button type="submit" class="button is-info">
+                            Add City
+                        </button>
                     </form>
                 </div>
             </div>
