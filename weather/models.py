@@ -9,5 +9,11 @@ class City(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def clean(self):
+        self.name = self.name.title()
+        self.state = self.state.upper()
+        self.country = self.country.upper()
+        super(City, self).clean()
+
     class Meta:
         verbose_name_plural = "cities"

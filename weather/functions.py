@@ -22,3 +22,12 @@ def get_coords_from_city(API_key, name, country="", state="") -> list:
     coords.append(lat)
     coords.append(lon)
     return coords
+
+
+def create_title_name(str1, str2) -> str:
+    """
+    Appends str2, in parentheses, to str1.
+    """
+    if str1.lower() != str2.lower():
+        return (str1 + " (" + str2 + ")").title()
+    return str2.title()
