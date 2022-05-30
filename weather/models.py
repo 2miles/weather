@@ -7,13 +7,13 @@ class City(models.Model):
     country = models.CharField(max_length=2, blank=True)
 
     def __str__(self) -> str:
-        return self.name
-
-    def clean(self):
-        self.name = self.name.title()
-        self.state = self.state.upper()
-        self.country = self.country.upper()
-        super(City, self).clean()
+        full_name = self.name
+        if self.state != "":
+            full_name = f"{self.name}, {self.state}"
+        elif self.country != "" and self.state == "":
+            full_name = f"{self.name}, {self.country}"
+        print(full_name)
+        return full_name
 
     class Meta:
         verbose_name_plural = "cities"
