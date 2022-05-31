@@ -1,20 +1,46 @@
+from django.http import Http404
 import requests
 from datetime import datetime
+from environs import Env
+
+env = Env()
+env.read_env()
+
+API_KEY = env.str("API_KEY")
+DEBUG = env.bool("DEBUG")
+
+
+def get_current_weather_data_from_coords(API_key, units, lat, lon) -> dict:
+    """ "
+    call for data from given lattitude and longitude. Returns dict of all data.
+    If lat and long is not valid returns None
+    """
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_key}&units={units}"
+    res = requests.get(url)
+    data = None
+    try:
+        res.raise_for_status()
+        data = res.json()
+    except:
+        pass
+    return data
 
 
 def get_coords_from_city(API_key, name, country="", state="") -> list:
     """
     Makes an API call for a givin cities lattitude and longitude.
-    state_code is optional for non-US locations.
-    Returns a list of the respective coords.  If the city is not found return None.
+    If the request fails, prints message to console (in debug mode), and returns None.
+    If the city is not found return None.
     """
     coords = []
-    url = f"http://api.openweathermap.org/geo/1.0/direct?q={name},{state},{country}&limit=1&appid={API_key}"
+    url = f"http://api.openweathermap.org/geo/1.0/direct?q={name},{state},{country}&limit=1&appid=asdf{API_key}"
     res = requests.get(url)
     try:
         res.raise_for_status()
     except requests.exceptions.HTTPError as e:
-        return "Error: " + str(e)
+        if DEBUG:
+            print("Error: " + str(e))
+        return None
     data = res.json()
     try:
         lat, lon = data[0]["lat"], data[0]["lon"]
@@ -23,6 +49,24 @@ def get_coords_from_city(API_key, name, country="", state="") -> list:
     coords.append(lat)
     coords.append(lon)
     return coords
+
+
+def get_current_weather_data_from_coords(API_key, units, lat, lon) -> dict:
+    """
+    Makes an API call for data from given lattitude and longitude. Returns dict of all data.
+    If lat and long is not valid returns None
+    """
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_key}&units={units}"
+    res = requests.get(url)
+    data = None
+    try:
+        res.raise_for_status()
+        data = res.json()
+    except requests.exceptions.HTTPError as e:
+        if DEBUG:
+            print("Error: " + str(e))
+        return None
+    return data
 
 
 def parse_current_weather_data(data: dict) -> dict:
