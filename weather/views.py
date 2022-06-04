@@ -36,6 +36,7 @@ def home_page_view(request):
             )
             if data:
                 weather_data = parse_current_weather_data(data)
+                weather_data["city_id"] = city.id
                 weather_data["printed_name"] = create_title_name(
                     str(city), weather_data["name"]
                 )
@@ -47,3 +48,8 @@ def home_page_view(request):
         "form": form,
     }
     return render(request, "home.html", context)
+
+
+def detail_view(request, id):
+    context = {"id": id}
+    return render(request, "detail.html", context)
