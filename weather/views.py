@@ -51,5 +51,9 @@ def home_page_view(request):
 
 
 def detail_view(request, id):
+    obj = City.objects.get(id=id)
     context = {"id": id}
+    context["name"] = obj.name
+    context["lat"] = obj.lattitude
+    context["lon"] = obj.longitude
     return render(request, "detail.html", context)
