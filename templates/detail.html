@@ -1,12 +1,11 @@
-<h2>
-    This is detail for {{ name }}
-</h2>
-<h3>
-    Coordinates:
-</h3>
+<h2>This is detail for {{ name }}</h2>
+<h3>Coordinates:</h3>
+<p>Lattitude = {{ lat }}</p>
+<p>Longitude = {{ lon }}</p>
+
+{% for data in forecast_list %}
 <p>
-    Lattitude = {{ lat }}
+  {{ data.date }} --- temp: {{ data.temp }} --- humidity: {{data.humidity}}% ---
+  feels like: {{ data.feels_like }} --- {{ data.description }}
 </p>
-<p>
-    Longitude = {{ lon }}
-</p>
+{% endfor %}

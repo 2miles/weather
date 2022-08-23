@@ -54,7 +54,7 @@ def get_coords_from_city(API_key, name, country="", state="") -> list:
 
 def get_current_weather_data_from_coords(API_key, units, lat, lon) -> dict:
     """
-    Makes an API call for data from given lattitude and longitude. Returns dict of all data.
+    Makes an API call for weather data from given lattitude and longitude. Returns dict of all data.
     If request returns a bad status, returns None
     """
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_key}&units={units}"
@@ -70,6 +70,24 @@ def get_current_weather_data_from_coords(API_key, units, lat, lon) -> dict:
     data = res.json()
     return data
 
+def get_forecast_from_coords(API_key, units, lat, lon) -> dict:
+    """
+    Makes an API call for forcast data from given lattitude and longitude. Returns dict of all data.
+    If request returns a bad status, returns None
+    """
+    url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_key}&units={units}"
+    data = None
+    try:
+        res = requests.get(url)
+        res.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if DEBUG:
+            # print("Error: " + str(e))
+            print(res.json()["cod"], res.json()["message"])
+        return None
+    data = res.json()
+    print(data)
+    return data
 
 def parse_current_weather_data(data: dict) -> dict:
     """
@@ -93,6 +111,37 @@ def parse_current_weather_data(data: dict) -> dict:
     ).strftime("%I:%M %p")
     return weather_data
 
+def parse_forecast_data(data: dict) -> list:
+    """
+    Takes all the data returned from the get_forcast_from_coords() and
+    builds and formats a list of dicts with specific key, values. If input dict is None, return None
+    """
+    if data == None:
+        return None
+    forecast_list = [dict() for i in range(40)]
+    for i in range(40):
+
+        # forecast_list[i]['time'] = data['list'][i]["dt"]
+        forecast_list[i]['date'] = data['list'][i]['dt_txt']
+        forecast_list[i]['icon'] = data['list'][i]["weather"][0]['icon']
+        forecast_list[i]['description'] = data['list'][i]["weather"][0]['description']
+        forecast_list[i]['temp'] = data['list'][i]["main"]['temp']
+        forecast_list[i]['humidity'] = data['list'][i]["main"]['humidity']
+        forecast_list[i]['feels_like'] = data['list'][i]["main"]['feels_like']
+    # weather_data = {}
+    # weather_data["name"] = data["name"]
+    # weather_data["description"] = data["weather"][0]["description"].capitalize()
+    # weather_data["icon"] = data["weather"][0]["icon"]
+    # weather_data["temp"] = str(round(data["main"]["temp"])) + " F"
+    # weather_data["humidity"] = str(data["main"]["humidity"]) + "%"
+    # weather_data["windspeed"] = str(round(data["wind"]["speed"])) + " mph"
+    # weather_data["sunrise"] = datetime.fromtimestamp(
+    #     data["sys"]["sunrise"] + data["timezone"]
+    # ).strftime("%I:%M %p")
+    # weather_data["sunset"] = datetime.fromtimestamp(
+    #     data["sys"]["sunset"] + data["timezone"]
+    # ).strftime("%I:%M %p")
+    return forecast_list
 
 def create_title_name(str1, str2) -> str:
     """

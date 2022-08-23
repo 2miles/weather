@@ -7,7 +7,9 @@ from .functions import (
     get_coords_from_city,
     get_current_weather_data_from_coords,
     create_title_name,
+    get_forecast_from_coords,
     parse_current_weather_data,
+    parse_forecast_data,
 )
 
 env = Env()
@@ -25,6 +27,7 @@ def home_page_view(request):
     else:
         form = CityForm()
     cities = City.objects.all()
+    print(cities)
     weather_data_list = []
     data = {}
     for city in cities:
@@ -41,6 +44,7 @@ def home_page_view(request):
                     str(city), weather_data["name"]
                 )
                 weather_data_list.append(weather_data)
+        print(data)
 
     context = {
         "all_data": data,
@@ -56,4 +60,8 @@ def detail_view(request, id):
     context["name"] = obj.name
     context["lat"] = obj.lattitude
     context["lon"] = obj.longitude
+    forcast_data = get_forecast_from_coords(API_KEY, "imperial", obj.lattitude, obj.longitude)
+    # context["forcast_data"] = forcast_data
+    parsed_forecast = parse_forecast_data(forcast_data)
+    context["forecast_list"] = parsed_forecast
     return render(request, "detail.html", context)
