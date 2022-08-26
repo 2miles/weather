@@ -58,8 +58,8 @@ def detail_view(request, id):
     obj = City.objects.get(id=id)
     context = {"id": id}
     context["name"] = obj.name
-    context["lat"] = obj.lattitude
-    context["lon"] = obj.longitude
+    # context["lat"] = obj.lattitude
+    # context["lon"] = obj.longitude
     forcast_data = get_forecast_from_coords(API_KEY, "imperial", obj.lattitude, obj.longitude)
     # context["forcast_data"] = forcast_data
     parsed_forecast = parse_forecast_data(forcast_data)

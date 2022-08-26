@@ -1,11 +1,73 @@
-<h2>This is detail for {{ name }}</h2>
-<h3>Coordinates:</h3>
-<p>Lattitude = {{ lat }}</p>
-<p>Longitude = {{ lon }}</p>
+{% extends 'base.html' %} 
 
-{% for data in forecast_list %}
-<p>
-  {{ data.date }} --- temp: {{ data.temp }} --- humidity: {{data.humidity}}% ---
-  feels like: {{ data.feels_like }} --- {{ data.description }}
-</p>
-{% endfor %}
+{% block content %} 
+{% if user.is_authenticated %}
+
+
+
+
+<body>
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">{{ name }} </h1>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="field has-addons">
+              <div class="control is-expanded">{{ form }}</div>
+              <div class="control"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          {% for data in forecast_list %}
+          <div class="box">
+            <article class="media">
+              <div class="media-left">
+                <figure class="image is-50x50">
+                  <img
+                    src="http://openweathermap.org/img/w/{{ data.icon }}.png"
+                    alt="Image"
+                  />
+                </figure>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    <span class="title">{{ data.day_of_week }} {{ data.time_of_day }}</span>
+                    <br />
+                    <span class="subtitle">
+                      <b> {{ data.temp }} F</b>
+                      , {{ data.description }}, </span>
+                    {{ data.humidity }}% humidity, feels like
+                    {{ data.feels_like }} 
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer"></footer>
+</body>
+
+{% else %}
+<h2>Login or signup to to continue</h2>
+{% endif %}  
+{% endblock content %}

@@ -1,0 +1,26 @@
+<h2>This is detail for {{ name }}</h2>
+<h3>Coordinates:</h3>
+<p>Lattitude = {{ lat }}</p>
+<p>Longitude = {{ lon }}</p>
+
+{% for data in forecast_list %}
+<p>
+  {{ data.date }} - temp: {{ data.temp }} - humidity: {{data.humidity}}% -
+  feels like: {{ data.feels_like }} - {{ data.description }}
+</p>
+
+
+ <p>
+    {{ all_data }}
+</p>
+{% for data in weather_data %}
+<p> Name: {{ data.name }} </p>
+<p> Des: {{ data.description }} </p>
+<p> Icon: {{ data.icon }} </p>
+<p> Temp: {{ data.temp }} </p>
+<p> Humidity: {{ data.humidity }} </p>
+<p> Windspeed: {{ data.windspeed }} </p>
+<p> Sunrise: {{ data.sunrise }} </p>
+<p> Sunset: {{ data.sunset }} </p>
+<br>
+{% endfor %}

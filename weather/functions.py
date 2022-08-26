@@ -1,3 +1,4 @@
+from time import strftime, time
 from django.http import Http404
 import requests
 from datetime import datetime
@@ -116,18 +117,30 @@ def parse_forecast_data(data: dict) -> list:
     Takes all the data returned from the get_forcast_from_coords() and
     builds and formats a list of dicts with specific key, values. If input dict is None, return None
     """
+    def day_of_week(seconds_epoc, timezone) -> str:
+        return datetime.fromtimestamp(seconds_epoc + timezone).strftime("%A")
+
+    def time_of_day(seconds_epoc, timezone) -> str:
+        return datetime.fromtimestamp(seconds_epoc + timezone).strftime("%-I%p")
+
     if data == None:
         return None
     forecast_list = [dict() for i in range(40)]
+    timezone = data["city"]["timezone"]
     for i in range(40):
 
         # forecast_list[i]['time'] = data['list'][i]["dt"]
-        forecast_list[i]['date'] = data['list'][i]['dt_txt']
+        epoc_time = data['list'][i]['dt']
+        week = day_of_week(epoc_time, timezone)
+        day = time_of_day(epoc_time, timezone)
+        # forecast_list[i]['date'] = data['list'][i]['dt_txt']
         forecast_list[i]['icon'] = data['list'][i]["weather"][0]['icon']
         forecast_list[i]['description'] = data['list'][i]["weather"][0]['description']
         forecast_list[i]['temp'] = data['list'][i]["main"]['temp']
         forecast_list[i]['humidity'] = data['list'][i]["main"]['humidity']
         forecast_list[i]['feels_like'] = data['list'][i]["main"]['feels_like']
+        forecast_list[i]['day_of_week'] = week
+        forecast_list[i]['time_of_day'] = day
     # weather_data = {}
     # weather_data["name"] = data["name"]
     # weather_data["description"] = data["weather"][0]["description"].capitalize()
@@ -142,6 +155,8 @@ def parse_forecast_data(data: dict) -> list:
     #     data["sys"]["sunset"] + data["timezone"]
     # ).strftime("%I:%M %p")
     return forecast_list
+
+
 
 def create_title_name(str1, str2) -> str:
     """
