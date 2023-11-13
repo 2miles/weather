@@ -34,7 +34,7 @@ python3 -m venv .venv
 ### 3. Activate the Virtual Environment
 
 ```
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 ### 4. Install Dependencies
@@ -47,7 +47,9 @@ pip install -r requirements.txt
 
 ### 5. Create a .env file
 
-Create a file in the root directory of the project named `.env`
+Create a file in the root directory of the project named `.env`. Add the following lines to the file.In the file add your Django SECRET_KEY that you are going to need to generate. You are also going to need an api key from OpenWeatherAPI.
+
+Remember to gitignore this file before ever pushing it to a remote repo.
 
 ```
 DEBUG=True
