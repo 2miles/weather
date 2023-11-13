@@ -51,8 +51,8 @@ Create a file in the root directory of the project named `.env`
 
 ```
 DEBUG=True
-SECRET_KEY=django-insecure-k=6#z#@2o3$lte4n9wssg5#h5+x4ry0+i*o$8qnkjlbful_2mc
-API_KEY=1c7a2a768805a74395751bbb1fb9767c
+SECRET_KEY=<your_secret_key>
+API_KEY=<your_open_weather_api_key>
 ```
 
 ### 5. Run Migrations
